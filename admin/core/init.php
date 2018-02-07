@@ -17,7 +17,7 @@ $GLOBALS['config'] = array(
 	),
 	'cards' => array(
 		'max_size' => 1000000,
-		'image/jpeg','image/png','image/'
+		'formats' => array('image/jpeg', 'image/png', 'image/gif'),
 	),
 	'mysql' => array(
 		'host' => '127.0.0.1',

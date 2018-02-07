@@ -1,5 +1,5 @@
 <?php
-require_once 'core/init.php';
+//require_once 'core/init.php';
 //adding new card
 if(Input::exists() && !empty(Input::get('cardCreate'))) {
     $validate = new Validate();
@@ -45,10 +45,7 @@ if(Input::exists() && !empty(Input::get('cardCreate'))) {
         }
         Session::flash('errors', implode("::", Routes::$errors));
     }
-}else {
-    Session::flash('home', "Provide the required information correctly");
 }
-
 
 //editing existing card
 
@@ -107,8 +104,11 @@ if(Input::exists() && !empty(Input::get('cardEdit'))) {
             Routes::$errors[] = $error;
         }
         Session::flash('errors', implode("::", Routes::$errors));
+        Redirect::to("cards=" . Input::get('name'));
     }
-}else {
+}
+if(empty(Input::get('cardCreate')) && empty(Input::get('cardEdit'))) {
     Session::flash('home', "Provide the required information correctly");
+    Redirect::to("cards");
 }
 Redirect::to("cards");

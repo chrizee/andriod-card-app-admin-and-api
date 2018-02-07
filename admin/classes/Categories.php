@@ -41,8 +41,10 @@ class Categories extends Action
     }
 
     public function add($name) {
+        $link = $this->save('icon', 'icons');
         $this->create(array(
             'name' => ($name),
+            'icon' => $link,
         ));
         $this->createDir($name);
     }

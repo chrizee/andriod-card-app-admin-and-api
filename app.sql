@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 05, 2018 at 07:07 AM
+-- Generation Time: Feb 07, 2018 at 07:08 AM
 -- Server version: 10.1.13-MariaDB
 -- PHP Version: 7.0.8
 
@@ -42,15 +42,8 @@ CREATE TABLE `cards` (
 --
 
 INSERT INTO `cards` (`id`, `name`, `category`, `tag`, `price`, `link`, `created_at`, `status`) VALUES
-(2, 'Second', 7, '0', 0.00, 'img/Birth/5a75f407f2dba.jpg', '2018-02-03 17:40:24', '1'),
-(3, 'third', 4, '0', 0.00, 'img/Okoro/5a75f6a81047c.jpg', '2018-02-03 17:51:36', '1'),
-(4, 'new name', 8, '1', 1200.00, 'img/test/5a75f7e4b5929.jpg', '2018-02-03 17:56:52', '1'),
-(5, 'dir test', 5, '1', 1230.00, 'img/Dir test/5a75fd4e8f1d2.jpg', '2018-02-03 18:19:58', '1'),
-(6, 'cake', 7, '0', 450.00, 'img/wedding/5a76e3a508975.jpg', '2018-02-03 20:05:12', '1'),
-(7, 'cake 12', 8, '0', 2000.00, 'img/wedding/5a761614f3145.jpg', '2018-02-03 20:05:40', '1'),
-(9, 'nametest', 8, '0', 0.00, 'img/test/5a76ee67d81af.jpg', '2018-02-04 11:28:39', '1'),
-(10, 'theo', 18, '0', 0.00, 'img/category/5a76ef47c8e99.jpg', '2018-02-04 11:32:23', '1'),
-(11, 'name2', 19, '1', 2200.00, 'img/categories/5a76f0e080776.jpg', '2018-02-04 11:35:03', '1');
+(1, 'cake', 2, '1', 1234.00, 'img/wedding/5a7a97a4997cb.jpg', '2018-02-07 06:07:32', '1'),
+(2, 'birth', 1, '0', 0.00, 'img/birthday/5a7a97d4ba455.jpg', '2018-02-07 06:08:20', '1');
 
 -- --------------------------------------------------------
 
@@ -62,6 +55,7 @@ CREATE TABLE `categories` (
   `id` int(11) NOT NULL,
   `name` varchar(50) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `icon` varchar(255) NOT NULL,
   `status` varchar(1) NOT NULL DEFAULT '1' COMMENT '1:active,0:deleted'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -69,18 +63,9 @@ CREATE TABLE `categories` (
 -- Dumping data for table `categories`
 --
 
-INSERT INTO `categories` (`id`, `name`, `created_at`, `status`) VALUES
-(1, 'Test', '2018-02-03 06:52:23', '1'),
-(2, 'Chris', '2018-02-03 06:54:11', '1'),
-(3, 'Efe', '2018-02-03 06:55:57', '1'),
-(4, 'Okoro', '2018-02-03 08:08:01', '1'),
-(5, 'Dir test', '2018-02-03 10:58:22', '1'),
-(6, 'Yggffv gf', '2018-02-03 11:20:17', '1'),
-(7, 'Birth', '2018-02-03 12:57:46', '1'),
-(8, 'test', '2018-02-03 17:56:52', '1'),
-(9, 'wedding', '2018-02-03 20:04:45', '1'),
-(18, 'category', '2018-02-04 11:32:23', '1'),
-(19, 'categories', '2018-02-04 11:35:02', '1');
+INSERT INTO `categories` (`id`, `name`, `created_at`, `icon`, `status`) VALUES
+(1, 'birthday', '2018-02-07 05:54:27', 'img/icons/5a7a9493d2969.jpg', '1'),
+(2, 'wedding', '2018-02-07 06:07:08', 'img/icons/5a7a978cefff6.jpg', '1');
 
 -- --------------------------------------------------------
 
@@ -142,12 +127,12 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `cards`
 --
 ALTER TABLE `cards`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 --
 -- AUTO_INCREMENT for table `categories`
 --
 ALTER TABLE `categories`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 --
 -- AUTO_INCREMENT for table `users`
 --

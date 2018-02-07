@@ -12,13 +12,13 @@ class Card extends Action
 
     public static function getTotal($category = '') {
         if($category) {
-            $sql = "SELECT COUNT(*) as total FROM cards WHERE category = ?";
+            $sql = "SELECT COUNT(*) as total FROM cards WHERE category = ? AND status =". Config::get('status/active');
             if (!$data = DB::getInstance()->query($sql, array($category))) {
-                throw new Exception("There was a problem getting total record");
+                throw new PDOException("There was a problem getting total record");
             }
             return $data->first()->total;
         }else {
-            $sql = "SELECT COUNT(id) as total FROM cards";
+            $sql = "SELECT COUNT(id) as total FROM cards WHERE status =". Config::get('status/active');
             if (!$data = DB::getInstance()->query($sql)) {
                 throw new PDOException("There was a problem getting total record");
             }
@@ -26,21 +26,4 @@ class Card extends Action
         }
     }
 
-    public function save($pic, $table) {
-        if($table) {
-            $name = uniqid(). ".jpg";
-            $path = "img/".$table."/";
-            if($dir = opendir($path)) {			//checks if the dir exist by opening it
-                closedir($dir);			//if the dir exist ie opens successfully,close it
-            } else {
-                $dir = "img/".$table;
-                mkdir($dir);				//if the dir doesn't exist create it inside the pic folder
-            }
-            $filename = $path.$name;
-            if(move_uploaded_file($_FILES[$pic]['tmp_name'], $filename)){
-                return $filename;
-            }
-        }
-        return false;
-    }
 }

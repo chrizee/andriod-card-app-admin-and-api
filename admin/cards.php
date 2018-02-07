@@ -1,6 +1,6 @@
 <?php
 require_once 'includes/content/header.php';
-$categories = $categoryObj->get();
+$categories = $categoryObj->get(['status', '=', Config::get('status/active')]);
 
 ?>
 

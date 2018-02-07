@@ -151,8 +151,8 @@ class Validate {
 	public function checkPic($pic) {		
 		if ($_FILES[$pic]["error"] == UPLOAD_ERR_OK and !empty($_FILES[$pic]) ) {
 			
-			if ($_FILES[$pic]["type"] != "image/jpeg") {
-				$this->addError("JPEG photos only");		
+			if (!in_array($_FILES[$pic]["type"], Config::get('cards/formats'))) {
+				$this->addError("JPEG/Png photos only");
 			}
 			if ($_FILES[$pic]["size"] > Config::get('cards/max_size') ) {
 				$this->addError("Photo size must be less than 1MB");		

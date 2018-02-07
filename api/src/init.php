@@ -2,33 +2,11 @@
 ini_set("display_errors", 'on');
 
 $GLOBALS['config'] = array(
-    'app' => array(
-        'name' => 'Placeholder',
-        'version' => "1.0",
-        'title' => "Cards",
-        'header' => "Admin",
-        'copyright' => "valence solutions",
-        'designer' => "CEO",
-    ),
-    'cards' => array(
-        'max_size' => 1000000,
-        'image/jpeg','image/png','image/'
-    ),
     'mysql' => array(
         'host' => '127.0.0.1',
         'username' => 'root',
         'password' => 'christo16',
         'db' => 'app'
-    ),
-    'session' => array(
-        'session_admin' => 'admin',
-        'token_name' => 'token'
-    ),
-    'cookie' => array(
-        'cookie_name' => 'cook',
-        'remember' => 'remember',
-        'expiry_one_day' => 86400,
-        'expiry_one_week' => 604800
     ),
     'status' => array(
         'deleted' => 0,

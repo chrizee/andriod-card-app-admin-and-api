@@ -1,6 +1,6 @@
 <?php
 require_once 'includes/content/header.php';
-$categories = $categoryObj->get();
+$categories = $categoryObj->get(['status', '=', Config::get('status/active')]);
 ?>
 
     <!-- Content Wrapper. Contains page content -->
@@ -72,8 +72,17 @@ $categories = $categoryObj->get();
                         <div class="box-body">
                             <?php
                             if($category = $categoryObj->getIdFromName($Qstring)) {
-                            $card = $cardObj->get(array('category', '=', $category));
-                            if(!empty($card)) {
+                                $card = $cardObj->get(array('category', '=', $category, 'status', '=', Config::get('status/active')));
+                                $cat = $categoryObj->get(['id', '=', $category]); ?>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <h4 class="text text-center text-success">Category Icon</h4>
+                                        <figure style="height:260px;">
+                                            <img src="<?php echo $cat[0]->icon ?>" alt="icon" class="img-responsive">
+                                        </figure>
+                                    </div>
+                                </div>
+                            <?php if(!empty($card)) {
                                 foreach ($card as $key => $value) {
                             ?>
                                     <div class="col-md-4 item-block animate-box" data-animate-effect="fadeIn">
@@ -114,7 +123,7 @@ $categories = $categoryObj->get();
                             <!-- /.box-header -->
                             <div class="box-body">
                                 <?php
-                                    $card = $cardObj->get();
+                                    $card = $cardObj->get(['status', '=', Config::get('status/active')]);
                                     if(!empty($card)) {
                                         foreach ($card as $key => $value) {
                                         ?>
@@ -152,14 +161,26 @@ $categories = $categoryObj->get();
                                 <h3 class="box-title">New category</h3>
                             </div>
                             <div class="box-body">
-                                <form role="form" class="" method="post" action="addcategory" id="create">
-                                        <div class="form-group">
-                                            <label for="name">Name of category</label>
-                                            <div class="input-group">
-                                                <input type="text" class="form-control" id="name" name="name" value="<?php echo escape(Input::get('name'))?>" required>
+                                <form role="form" class="" method="post" action="addcategory" id="create" enctype="multipart/form-data">
+                                    <div class="form-group">
+                                        <label for="name">Name of category</label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" id="name" name="name" value="<?php echo escape(Input::get('name'))?>" required>
 
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="inputPhoto" >Category icon</label>
+
+                                        <div class="input-group">
+                                            <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo Config::get('cards/max_size')?>" />
+                                            <input type="file" class="form-control" id="inputPhoto" name="icon" required>
+                                            <div class="input-group-addon">
+                                                <i class="fa fa-cog"></i>
                                             </div>
                                         </div>
+                                    </div>
                                     <div class="box-footer">
                                         <input type="submit" class="btn btn-primary" name="category" value="Add">
                                     </div>

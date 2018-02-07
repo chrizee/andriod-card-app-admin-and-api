@@ -35,6 +35,24 @@
 			return $lastId;
 		}
 
+        public function save($pic, $table) {
+            if($table) {
+                $name = uniqid(). ".jpg";
+                $path = "img/".$table."/";
+                if($dir = opendir($path)) {			//checks if the dir exist by opening it
+                    closedir($dir);			//if the dir exist ie opens successfully,close it
+                } else {
+                    $dir = "img/".$table;
+                    mkdir($dir);				//if the dir doesn't exist create it inside the pic folder
+                }
+                $filename = $path.$name;
+                if(move_uploaded_file($_FILES[$pic]['tmp_name'], $filename)){
+                    return $filename;
+                }
+            }
+            return false;
+        }
+
 		//returns the time part of the date in a precise format
 		public function date($date) {
 			$init = new dateTime($date);
