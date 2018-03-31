@@ -52,11 +52,8 @@ $categories = $categoryObj->get(['status', '=', Config::get('status/active')]);
                         <form role="form" method="post" name="card" id="card" enctype="multipart/form-data" action="addcard">
                             <div class="form-group">
                                 <label for="name">Name</label>
-                                <div class="input-group">
+                                <div class="input-group" style="width: 100%;">
                                     <input type="text" class="form-control" id="name" name="name" value="" required>
-                                    <div class="input-group-addon">
-                                        <i class="fa fa-bus"></i>
-                                    </div>
                                 </div>
                             </div>
 
@@ -68,50 +65,63 @@ $categories = $categoryObj->get(['status', '=', Config::get('status/active')]);
                                     foreach ($categories as $value) { ?>
                                         <option value=<?php echo $value->id; ?>><?php echo $value->name; ?></option>
                                     <?php } ?>
-                                    <option value="new">new category</option>
+                                    <!--<option value="new">new category</option>-->
                                 </select>
                             </div>
 
-                            <div class="form-group new_category hidden">
+                            <div class="form-group hidden subcategory">
+                                <label for="category">Sub Category (optional)</label>
+                                <select style="text-transform:capitalize;" class="form-control select2" name="subcategory" style="width: 100%;" >
+
+                                </select>
+                            </div>
+                            <?php /*?>
+                            <!--<div class="form-group new_category hidden">
                                 <label for="cat_name">New Category</label>
                                 <div class="input-group">
                                     <input type="text" class="form-control" id="cat_name" name="cat_name" value="">
-                                    <div class="input-group-addon">
-                                        <i class="fa fa-cog"></i>
-                                    </div>
                                 </div>
                             </div>
 
+                            <div class="form-group new_sub_category hidden">
+                                <label for="sub_cat_name">New Sub Category</label>
+                                <div class="input-group" style="width: 100%;">
+                                    <input type="text" class="form-control" id="sub_cat_name" name="sub_cat_name" value="">
+                                </div>
+                            </div>
 
+                            <div class="form-group sub_category_icon hidden">
+                                <label for="inputPhoto" >Sub Category Icon</label>
+
+                                <div class="input-group">
+                                    <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo Config::get('cards/max_size')?>" />
+                                    <input type="file" class="form-control" id="inputPhoto" name="icon">
+
+                                </div>
+                            </div>-->
+                            <?php */ ?>
                             <div class="form-group">
                                 <label>Tag &nbsp;</label>
                                 <label>
                                     <input type="radio" name="tag" value="<?php echo Config::get('tag/free')?>" checked> Free
                                 </label>
                                 <label>
-                                    <input type="radio" name="tag" value="<?php echo Config::get('tag/paid')?>"> Paid
+                                    <input type="radio" name="tag" value="<?php echo Config::get('tag/paid')?>"> Add Price
                                 </label>
                             </div>
 
                             <div class="form-group price hidden">
-                                <label for="price">Price</label>
+                                <label for="price">Price (<?php echo Config::get('app/currency')?>) </label>
                                 <div class="input-group">
                                     <input type="text" class="form-control" name="price" data-inputmask="'alias': 'decimal'" data-mask>
-                                    <div class="input-group-addon">
-                                        <i class="fa fa-cog"></i>
-                                    </div>
                                 </div>
                             </div>
 
                             <div class="form-group">
                                 <label for="inputPhoto" >Card</label>
-
                                 <div class="input-group">
                                     <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo Config::get('cards/max_size')?>" />
                                     <input type="file" class="form-control" id="inputPhoto" name="card" required>
-                                    <div class="input-group-addon">
-                                        <i class="fa fa-cog"></i>
-                                    </div>
                                 </div>
                             </div>
 
@@ -138,13 +148,22 @@ $categories = $categoryObj->get(['status', '=', Config::get('status/active')]);
                                 $value = $card[0];
                                     ?>
                                     <div class="col-md-4 item-block animate-box" data-animate-effect="fadeIn">
-                                        <a href="cards=<?php echo $value->name ?>">
+
                                             <div class="fh5co-property">
                                                 <figure style="height:260px;">
                                                     <img src="<?php echo $value->link?>" alt="card" class="img-responsive">
                                                 </figure>
                                                 <div class="fh5co-property-innter">
-                                                    <h3 class="head"><a href="cards=<?php echo $value->name?>"><?php echo $value->name ?></a></h3>
+                                                    <h3 class="head">Category: <a href="categories=<?php echo $categoryObj->getNameFromId($value->category)?>"><?php echo $categoryObj->getNameFromId($value->category) ?></a></h3>
+                                                    <?php
+                                                        if($value->sub_category != 0) {
+                                                            ?>
+                                                            <h5 class="head">Sub category:<a
+                                                                        href="categories=<?php echo $subCategoryObj->getNameFromId($value->sub_category) ?>"><?php echo $subCategoryObj->getNameFromId($value->sub_category) ?></a>
+                                                            </h5>
+                                                            <?php
+                                                        }
+                                                            ?>
                                                     <div class="price-status">
                                                         <span class="price"><?php echo ($value->price != 0 && $value->tag == Config::get('tag/paid'))? "Price: ".$value->price : "Free";?> </span>
                                                     </div>
@@ -153,20 +172,19 @@ $categories = $categoryObj->get(['status', '=', Config::get('status/active')]);
                                                     <span><strong>Created: </strong> <?php $date = new dateTime($value->created_at); echo $date->format('d-M-Y h:i A') ?></span>
                                                 </p>
                                             </div>
-                                        </a>
+
                                         <button class="btn btn-sm btn-primary pull-right edit">Edit</button>
                                     </div>
                                     <div class="col-md-8 edit_form hidden">
                                         <h2>Edit <?php echo escape($Qstring);?></h2>
                                         <form role="form" method="post" name="card" id="card" enctype="multipart/form-data" action="addcard">
                                             <input type="hidden" name="id" value="<?php echo $value->id?>">
+                                            <input type="hidden" name="oldcategory" value="<?php echo $value->category?>">
+                                            <input type="hidden" name="oldsubcategory" value="<?php echo $value->sub_category?>">
                                             <div class="form-group">
                                                 <label for="name">Name</label>
                                                 <div class="input-group">
                                                     <input type="text" class="form-control" id="name" name="name" value="<?php echo $value->name ?>" required>
-                                                    <div class="input-group-addon">
-                                                        <i class="fa fa-bus"></i>
-                                                    </div>
                                                 </div>
                                             </div>
 
@@ -181,16 +199,22 @@ $categories = $categoryObj->get(['status', '=', Config::get('status/active')]);
                                                         <?php } ?>
                                                        <!-- <option value="new">new category</option>-->
                                                     </select>
+                                                </div>
                                             </div>
 
-                                            <div class="form-group new_category hidden">
-                                                <label for="cat_name">New Category</label>
-                                                <div class="input-group">
-                                                    <input type="text" class="form-control" id="cat_name" name="cat_name" value="">
-                                                    <div class="input-group-addon">
-                                                        <i class="fa fa-cog"></i>
-                                                    </div>
-                                                </div>
+                                            <div class="form-group <?php echo ($value->sub_category == 0) ? 'hidden': ''; ?> subcategory">
+                                                <label for="subcategory">Sub Category (optional)</label>
+                                                <select style="text-transform:capitalize;" class="form-control select2" name="subcategory" style="width: 100%;" >
+                                                    <?php
+                                                        if($value->sub_category != 0 && ($subcategory = $categoryObj->hasSubCategories($value->category))) {
+                                                            echo "<option value=''>--select--</option>";
+                                                            foreach ($subcategory as $subcat) {
+                                                                print_r($subcategory);
+                                                    ?>
+                                                                <option value="<?php echo $subcat->id ?>" <?php if($value->sub_category == $subcat->id) echo "selected=selected" ?>><?php echo $subcat->name ?></option>
+                                                            <?php }}?>
+
+                                                </select>
                                             </div>
 
                                             <div class="form-group">
@@ -207,9 +231,6 @@ $categories = $categoryObj->get(['status', '=', Config::get('status/active')]);
                                                 <label for="price">Price</label>
                                                 <div class="input-group">
                                                     <input type="text" class="form-control" value="<?php echo $value->price ?>" name="price2" data-inputmask="'alias': 'decimal'" data-mask>
-                                                    <div class="input-group-addon">
-                                                        <i class="fa fa-cog"></i>
-                                                    </div>
                                                 </div>
                                             </div>
 
@@ -220,9 +241,6 @@ $categories = $categoryObj->get(['status', '=', Config::get('status/active')]);
                                                     <input type="hidden" name="previousCard" value="<?php echo $value->link;?>" />
                                                     <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo Config::get('cards/max_size')?>" />
                                                     <input type="file" class="form-control" id="inputPhoto" name="card">
-                                                    <div class="input-group-addon">
-                                                        <i class="fa fa-cog"></i>
-                                                    </div>
                                                 </div>
                                             </div>
 
@@ -249,13 +267,38 @@ $categories = $categoryObj->get(['status', '=', Config::get('status/active')]);
 <!-- /.content-wrapper -->
 <script type="text/javascript">
     $(document).ready(function() {
+        $('div.input-group').css("width", "100%");
         $(document).on('change', "select[name=category]", function(e) {
             if($("select[name=category]").val() == "new") {
                 $('div.new_category').removeClass('hidden').slideDown('slow');
                 $('input[name=cat_name]').attr('required', 'required');
             }else {
+                var $id = $(this).val();
+                $.post('_checkforsub', {id: $id}, function($result) {
+                    //console.log($result);
+                  if($result != 'X'){
+                      $sub = JSON.parse($result);
+                      $('div.subcategory').removeClass('hidden');
+                      $('select[name=subcategory]').html('');
+                      $('select[name=subcategory]').append("<option value=''>--select--</option>")
+                      $($sub).each(function(index,value) {
+                          $('select[name=subcategory').append("<option value='"+value.id+"'>"+value.name+"</option>")
+                      });
+                  }else{
+                      $('div.subcategory').addClass('hidden');
+                      $('select[name=subcategory]').html('');
+                  }
+                });
                 $('div.new_category').addClass('hidden');
                 $('input[name=cat_name]').removeAttr('required');
+            }
+        }).on('change', "select[name=subcategory]", function(e) {
+            if($(this).val() == "new") {
+                $('div.new_sub_category').removeClass('hidden');
+                $('input[name=sub_cat_name]').attr('required', 'required');
+            }else {
+                $('div.new_sub_category').addClass('hidden');
+                $('input[name=sub_cat_name').removeAttr('required');
             }
         }).on('click',"input[name=tag]", function(e) {
             if($("input[name=tag]").filter(':checked').val() == "<?php echo Config::get('tag/paid')?>" ) {

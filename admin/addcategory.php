@@ -11,12 +11,18 @@ if(Input::exists() && !empty(Input::get('category'))) {
     if(empty($_FILES['card'])) {
         $validation->errors[] = "No file was uploaded. Make sure you choose a file to upload";
     }
-    $validation->checkPic('card');
+    $validation->checkPic('icon');
     if ($validation->passed()) {
         try {
-            $categoryObj->add(Input::get('name'));
-            Session::flash('home', Input::get('name')." added");
-            Redirect::to("categories=".Input::get('name'));
+            if(Input::get('sub') == 1 && !empty(Input::get('parent'))){
+                $subCategoryObj->add();
+                Session::flash('home', Input::get('name') . " added");
+               Redirect::to("dashboard=" . Input::get('name'));
+            }else {
+                $categoryObj->add();
+                Session::flash('home', Input::get('name') . " added");
+                Redirect::to("dashboard=" . Input::get('name'));
+            }
         } catch (Exception $e) {
             print_r($e->getMessage());
         }
@@ -29,4 +35,4 @@ if(Input::exists() && !empty(Input::get('category'))) {
 }else {
     Session::flash('home', "Provide the required information correctly.");
 }
-Redirect::to("categories");
+Redirect::to("dashboard");

@@ -117,12 +117,6 @@
             <i class="fa fa-dashboard"></i> <span>Dashboard</span>
           </a>
         </li>
-        <li class="<?php if($query[0] == 'categories') echo 'active'?> treeview">
-          <a href="categories">
-            <i class="fa fa-automobile"></i>
-            <span>Categories</span>
-          </a>
-        </li>
         <li class="<?php if($query[0] == 'cards') echo 'active'?>">
           <a href="cards">
             <i class="fa fa-suitcase"></i> <span>Cards</span>

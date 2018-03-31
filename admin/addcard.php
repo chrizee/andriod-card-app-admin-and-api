@@ -16,18 +16,21 @@ if(Input::exists() && !empty(Input::get('cardCreate'))) {
 
     if ($validation->passed()) {
         try {
-            //create new category if field is present
+            /*create new category if field is present
             $id = '';
             if(!empty(Input::get('cat_name'))) {
                 $categoryObj->add(Input::get('cat_name'));
                 $id = $categoryObj->lastId();
-            }
-            $category = (!empty($id) && Input::get('category') == 'new') ? $id : Input::get('category');
-            if($link = $cardObj->save('card',$categoryObj->getNameFromId($category))) {
+            }*/
+            //$category = (!empty($id) && Input::get('category') == 'new') ? $id : Input::get('category');
+            $subcategory = (!empty(Input::get('subcategory'))) ? Input::get('subcategory') : '';
+            $table = (!empty($subcategory)) ? $categoryObj->getNameFromId(Input::get('category')).'/'.$subCategoryObj->getNameFromId($subcategory): $categoryObj->getNameFromId(Input::get('category')) ;
+            if($link = $cardObj->save('card',$table)) {
                 $price = (!empty(Input::get('price'))) ? Input::get('price'): '';
                 $cardObj->create(array(
                     'name' => Input::get('name'),
-                    'category' => $category,
+                    'category' => Input::get('category'),
+                    'sub_category' => $subcategory,
                     'tag' => Input::get('tag'),
                     'price' => $price,
                     'link' => $link,
@@ -71,12 +74,17 @@ if(Input::exists() && !empty(Input::get('cardEdit'))) {
                 $id = $categoryObj->lastId();
             }
             $category = (!empty($id) && Input::get('category') != 'new') ? $id : Input::get('category');
+            $subcategory = (!empty(Input::get('subcategory'))) ? Input::get('subcategory') : '';
+            if(Input::get('oldcategory') != Input::get('category') && Input::get('oldsubcategory') == Input::get('subcategory')) {
+                $subcategory = '';
+            }
             $price = (!empty(Input::get('price2'))) ? Input::get('price2') : '';
             if(!empty($_FILES['card']['name'])) {
                 if ($link = $cardObj->save('card', $categoryObj->getNameFromId($category))) {
                     $cardObj->update(Input::get('id'), array(
                         'name' => Input::get('name'),
                         'category' => $category,
+                        'sub_category' => $subcategory,
                         'tag' => Input::get('tag2'),
                         'price' => $price,
                         'link' => $link,
@@ -89,6 +97,7 @@ if(Input::exists() && !empty(Input::get('cardEdit'))) {
                 $cardObj->update(Input::get('id'), array(
                     'name' => Input::get('name'),
                     'category' => $category,
+                    'sub_category' => $subcategory,
                     'tag' => Input::get('tag2'),
                     'price' => $price,
                 ));

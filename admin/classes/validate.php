@@ -152,7 +152,7 @@ class Validate {
 		if ($_FILES[$pic]["error"] == UPLOAD_ERR_OK and !empty($_FILES[$pic]) ) {
 			
 			if (!in_array($_FILES[$pic]["type"], Config::get('cards/formats'))) {
-				$this->addError("JPEG/Png photos only");
+				$this->addError("jpeg/jpg/png/gif photos only");
 			}
 			if ($_FILES[$pic]["size"] > Config::get('cards/max_size') ) {
 				$this->addError("Photo size must be less than 1MB");		

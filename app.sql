@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 07, 2018 at 07:08 AM
+-- Generation Time: Mar 31, 2018 at 10:22 AM
 -- Server version: 10.1.13-MariaDB
 -- PHP Version: 7.0.8
 
@@ -30,6 +30,7 @@ CREATE TABLE `cards` (
   `id` int(11) NOT NULL,
   `name` varchar(200) NOT NULL,
   `category` int(11) NOT NULL,
+  `sub_category` int(11) NOT NULL DEFAULT '0',
   `tag` varchar(1) NOT NULL DEFAULT '0' COMMENT '0:free,1:paid',
   `price` float(8,2) NOT NULL DEFAULT '0.00',
   `link` varchar(100) NOT NULL,
@@ -41,9 +42,10 @@ CREATE TABLE `cards` (
 -- Dumping data for table `cards`
 --
 
-INSERT INTO `cards` (`id`, `name`, `category`, `tag`, `price`, `link`, `created_at`, `status`) VALUES
-(1, 'cake', 2, '1', 1234.00, 'img/wedding/5a7a97a4997cb.jpg', '2018-02-07 06:07:32', '1'),
-(2, 'birth', 1, '0', 0.00, 'img/birthday/5a7a97d4ba455.jpg', '2018-02-07 06:08:20', '1');
+INSERT INTO `cards` (`id`, `name`, `category`, `sub_category`, `tag`, `price`, `link`, `created_at`, `status`) VALUES
+(1, 'test', 1, 1, '0', 0.00, 'img/birthday/5abf46201f53b.jpg', '2018-03-31 08:26:08', '1'),
+(2, 'test1', 2, 0, '0', 0.00, 'img/wedding/5abf49f8355c2.jpg', '2018-03-31 08:42:32', '1'),
+(3, 'test2', 1, 1, '0', 0.00, 'img/birthday/may/5abf4a19d9d12.jpg', '2018-03-31 08:43:05', '1');
 
 -- --------------------------------------------------------
 
@@ -64,8 +66,30 @@ CREATE TABLE `categories` (
 --
 
 INSERT INTO `categories` (`id`, `name`, `created_at`, `icon`, `status`) VALUES
-(1, 'birthday', '2018-02-07 05:54:27', 'img/icons/5a7a9493d2969.jpg', '1'),
-(2, 'wedding', '2018-02-07 06:07:08', 'img/icons/5a7a978cefff6.jpg', '1');
+(1, 'birthday', '2018-03-31 08:21:51', 'img/icons/5abf451e98eac.jpg', '1'),
+(2, 'wedding', '2018-03-31 08:25:24', 'img/icons/5abf45f40920c.jpg', '1');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `sub_categories`
+--
+
+CREATE TABLE `sub_categories` (
+  `id` int(11) NOT NULL,
+  `name` varchar(200) NOT NULL,
+  `parent` varchar(11) NOT NULL,
+  `icon` varchar(200) NOT NULL,
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `status` varchar(1) NOT NULL DEFAULT '1' COMMENT '0:deleted,1:active'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `sub_categories`
+--
+
+INSERT INTO `sub_categories` (`id`, `name`, `parent`, `icon`, `created_at`, `status`) VALUES
+(1, 'may', '1', 'img/icons/5abf45cbcab44.jpg', '2018-03-31 09:24:43', '1');
 
 -- --------------------------------------------------------
 
@@ -114,6 +138,12 @@ ALTER TABLE `categories`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `sub_categories`
+--
+ALTER TABLE `sub_categories`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
@@ -127,12 +157,17 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `cards`
 --
 ALTER TABLE `cards`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT for table `categories`
 --
 ALTER TABLE `categories`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+--
+-- AUTO_INCREMENT for table `sub_categories`
+--
+ALTER TABLE `sub_categories`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT for table `users`
 --

@@ -26,34 +26,42 @@ class Categories extends Action
         return false;
     }
 
-    private function createDir($name) {
+    protected function createDir($name,$parent = false) {
         if($name) {
-            $path = "img/".$name."/";		//specifies the path
-            if($dir = opendir($path)) {			//checks if the dir exist by opening it
-                closedir($dir);			//if the dir exist ie opens successfully,close it
+            $path = "img/" . $name . "/";        //specifies the path
+            if($parent) {
+                $this->_table = "categories";
+                $path = "img/".trim($this->getNameFromId($parent))."/".$name."/";
+            }
+            if ($dir = @opendir($path)) {            //checks if the dir exist by opening it
+                closedir($dir);            //if the dir exist ie opens successfully,close it
             } else {
-                $dir = "img/".$name;
-                mkdir($dir);				//if the dir doesn't exist create it inside the pic folder
+                $dir = "img/" . $name;
+                if($parent) $dir = rtrim($path, '/');
+                mkdir($dir);                //if the dir doesn't exist create it inside the pic folder
             }
 
         }
-        return false;
     }
 
-    public function add($name) {
+    public function add() {
         $link = $this->save('icon', 'icons');
         $this->create(array(
-            'name' => ($name),
+            'name' => Input::get('name'),
             'icon' => $link,
         ));
-        $this->createDir($name);
+        $this->createDir(Input::get('name'));
     }
 
-    public function exists($id, $name = false) {
+    public function exists($id, $name = false, $field = 'id') {
         if($id) {
-            $data = $this->get(array('id', '=', $id));
-            if(count($data)) {
-                return $data[0];
+            try {
+                $data = $this->get(array($field, '=', $id), 'id, name');
+                if (count($data)) {
+                    return $data;
+                }
+            } catch (Exception $e) {
+                die($e->getMessage());
             }
         }
         if($name) {
@@ -63,5 +71,10 @@ class Categories extends Action
             }
         }
         return false;
+    }
+
+    public function hasSubCategories($id) {
+        $this->_table = 'sub_categories';
+        return $this->exists($id,false,'parent');
     }
 }
