@@ -12,6 +12,7 @@ $GLOBALS['config'] = array(
 		'version' => "1.0",
 		'title' => "Cards",
 		'header' => "Admin",
+		'currency' => 'N',
 		'copyright' => "valence solutions",
 		'designer' => "CEO",
 	),

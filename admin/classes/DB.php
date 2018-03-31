@@ -56,34 +56,6 @@ class DB {
 	//prototype method for mysql actions
 	public  function action($action, $table, $where = array()) {
 		$operators = array('=', '>', '<', '>=', '<=', '<>', '<=>', '!=', 'LIKE');
-		/*if(count($where) === 3) {
-
-			$field 		= $where[0];
-			$operator 	= $where[1];
-			$value 		= $where[2];
-
-			if(in_array($operator, $operators)) {
-				$sql = "{$action} FROM {$table} WHERE {$field} {$operator} ?";
-				if(!$this->query($sql,array($value))->error()) {
-					return $this;
-				}
-			}
-		}
-		if(count($where) === 6) {
-			$field1 		= $where[0];
-			$operator1 	    = $where[1];
-			$value1 		= $where[2];
-			$field2 		= $where[3];
-			$operator2 		= $where[4];
-			$value2			= $where[5];
-
-			if(in_array($operator1, $operators) && in_array($operator2, $operators)) {
-				$sql = "{$action} FROM {$table} WHERE {$field1} {$operator1} ? AND {$field2} {$operator2} ?";
-				if(!$this->query($sql,array($value1, $value2))->error()) {
-					return $this;
-				}
-			}
-		}*/
 		if(count($where) % 3 == 0) {
 			$z = count($where) / 3;
 			$wherestr = "";
