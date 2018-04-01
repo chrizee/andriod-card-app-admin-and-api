@@ -43,15 +43,33 @@ $categories = $categoryObj->get(['status', '=', Config::get('status/active')]);
                     </div>
                     <div class="box-body no-padding">
                         <ul class="nav nav-pills nav-stacked">
-                            <li <?php if(!$Qstring) echo "class=\"active\""?>><a href="dashboard">All
-                                    <span class="label label-primary pull-right"><?php echo Card::getTotal(); ?></span></a>
+                            <li <?php if(!$Qstring) echo "class=\"active\""?>><a href="dashboard"><i class="fa fa-asterisk"></i> All
+                                    <span class="label label-primary"><?php echo Card::getTotal(); ?></span></a>
                             </li>
                             <?php if(!empty($categories)) {
                                 foreach ($categories as $key => $value) { ?>
-                                    <li <?php if(html_entity_decode($Qstring) == $value->name) echo "class=\"active\""?>><a href="dashboard=<?php echo htmlentities($value->name);?>"><i class="fa fa-inbox"></i> <?php echo ucfirst($value->name)?>
-                                            <span class="label label-primary pull-right"><?php echo Card::getTotal($value->id); ?></span></a></li>
-                                    </li>
+                                    <li class="<?php if($sublist = $categoryObj->hasSubCategories($value->id)) echo 'dropdown';
+                                    if(html_entity_decode($Qstring) == $value->name) echo 'active ';
+                                    ?>">
+                                        <a <?php echo (!empty($sublist)) ? "style=\"display: inline-block; width: 80%;\"": '' ?>" href="dashboard=<?php echo htmlentities($value->name);?>">
+                                            <i class="fa fa-inbox"></i> <?php echo ucfirst($value->name)?>
+                                            <span class="label label-primary"><?php echo Card::getTotal($value->id); ?></span>
+                                        </a>
+                                        <?php if($sublist){?>
+                                        <a style="padding: 7px 15px;display: inline; border-color: white; width: 20%;" class="pull-right clickDropdown btn btn-sm dropdown-toggle" type="button" data-toggle="dropdown">
+                                            <span class="caret"></span>
+                                        </a>
 
+                                    <?php }
+                                        if($sublist){?>
+                                            <ul class="dropdown-menu">
+                                                <?php foreach ($sublist as $list){
+                                    ?>
+                                                <li><a href="dashboard=<?php echo $list->name?>"><?php echo $list->name?></a></li>
+                                    <?php }?>
+                                            </ul>
+                                                <?php }?>
+                                    </li>
                                     <?php }} else{ ?>
                                 <li><a href="#" ><i class="fa fa-exclamation"></i>No category</a></li>
                             <?php }?>
@@ -76,10 +94,9 @@ $categories = $categoryObj->get(['status', '=', Config::get('status/active')]);
                                 $card = $cardObj->get(array('category', '=', $category, 'status', '=', Config::get('status/active')));
                                 $cat = $categoryObj->get(['name', '=', $Qstring]); //check for category using name not to conflict with sub category
                                 $folder = "category";
-                                if(empty($card) || empty($cat)) {   //first time it shud be or
+                                if(empty($cat)) {   //first time it shud be or
                                     $card = $cardObj->get(array('sub_category', '=', $category, 'status', '=', Config::get('status/active')));
                                     $cat = $subCategoryObj->get(['id', '=', $category]);
-                                    //print_r($cat);
                                     $folder = "sub category";
                                 }
                                 ?>

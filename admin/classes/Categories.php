@@ -75,6 +75,8 @@ class Categories extends Action
 
     public function hasSubCategories($id) {
         $this->_table = 'sub_categories';
-        return $this->exists($id,false,'parent');
+        $subData = $this->exists($id,false,'parent');
+        $this->_table = 'categories';
+        return $subData;
     }
 }
