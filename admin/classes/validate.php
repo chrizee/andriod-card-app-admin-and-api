@@ -178,4 +178,32 @@ class Validate {
 		}
 		return $this;
 	}
+
+    public function checkPic2($pic) {
+        if ($_FILES[$pic]["error"] == UPLOAD_ERR_OK and !empty($_FILES[$pic]) ) {
+
+            if (!in_array($_FILES[$pic]["type"], Config::get('cards/formats'))) {
+                $this->addError("jpeg/jpg/png/gif photos only");
+            }
+            if ($_FILES[$pic]["size"] > Config::get('cards/max_size') ) {
+                $this->addError("Photo size must be less than 1MB");
+            }
+        } else {
+            switch( $_FILES[$pic]["error"] ) {
+                case UPLOAD_ERR_INI_SIZE:
+                    $this->addError("The photo is larger than the server allows.");
+                    break;
+                case UPLOAD_ERR_FORM_SIZE:
+                    $this->addError("The photo is larger than the script allows.");
+                    break;
+            }
+
+        }
+        if(empty($this->_errors)) {
+            $this->_passed = true;
+        } else {
+            $this->_passed = false;
+        }
+        return $this;
+    }
 }

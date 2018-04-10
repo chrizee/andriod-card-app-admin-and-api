@@ -92,20 +92,27 @@ $categories = $categoryObj->get(['status', '=', Config::get('status/active')]);
                             <?php
                             if(($category = $categoryObj->getIdFromName($Qstring)) || ($category = $subCategoryObj->getIdFromName($Qstring))) {
                                 $card = $cardObj->get(array('category', '=', $category, 'status', '=', Config::get('status/active')));
-                                $cat = $categoryObj->get(['name', '=', $Qstring]); //check for category using name not to conflict with sub category
+                                $cat = $categoryObj->get(['name', '=', $Qstring, 'status', '=', Config::get('status/active')]); //check for category using name not to conflict with sub category
                                 $folder = "category";
                                 if(empty($cat)) {   //first time it shud be or
                                     $card = $cardObj->get(array('sub_category', '=', $category, 'status', '=', Config::get('status/active')));
-                                    $cat = $subCategoryObj->get(['id', '=', $category]);
+                                    $cat = $subCategoryObj->get(['id', '=', $category, 'status', '=', Config::get('status/active')]);
                                     $folder = "sub category";
                                 }
                                 ?>
                                 <div class="row">
-                                    <div class="col-md-4">
-                                        <h4 class="text text-center text-success"><?php echo ucwords($folder) ?> Icon</h4>
-                                        <figure style="height:260px;">
-                                            <img src="<?php echo $cat[0]->icon ?>" alt="icon" class="img-responsive">
-                                        </figure>
+                                    <div class="col-md-12" style="border-bottom: 1px dashed blue;">
+                                        <div class="col-md-4">
+                                            <h4 class="text text-center text-success"><?php echo ucwords($folder) ?> Icon</h4>
+                                            <figure style="height:260px;">
+                                                <img src="<?php echo $cat[0]->icon ?>" alt="icon" class="thumbnail img-responsive">
+                                            </figure>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <a href="delete<?php echo str_replace(' ', '', $folder)."=".$cat[0]->id;?>">
+                                                <button class="btn btn-sm btn-danger" title="This will delete all cards in this category/subcategory">Delete <?php echo $folder; ?></button>
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
                                 <?php if(!empty($card)) {

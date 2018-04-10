@@ -200,59 +200,14 @@ class User {
 	public function errors() {
 		return $this->_errors;
 	}
-	//method to count the no of trip loaded by a staff for profile page..can be used for award or something..
-	public function getTripCount($id = null) {
-		if($id) {
-			$sql = "SELECT COUNT(*) as count FROM `travels` WHERE user_id = {$id}";
-			$count = $this->_db->query($sql)->first()->count;
-			return $count;
-		} else {
-			$sql = "SELECT COUNT(*) as count FROM `travels` WHERE user_id = {$this->data()->id}";
-			$count = $this->_db->query($sql)->first()->count;
-			return $count;
-		}
-	}
-	//method to get meta data of users from meta table..can get that of currently logged in user or or that specified in the $id 
-	public function getMeta($id = null) {
-		if($id) {
-			$meta = $this->_db->get('users_meta', array('user_id', '=', $id));
-			return $meta;	
-		} else {
-			$meta = $this->_db->get('users_meta', array('user_id', '=', $this->data()->id));
-			return $meta;
-		}
-	}
-	//methos to get title of users in profile page from groups table
-	public function getTitle($id = null) {
-		if($id) {
-			$title = $this->_db->get('groups', array('id', '=', $id), 'title')->first()->title;
-			return $title;	
-		}else {
-			$title = $this->_db->get('groups', array('id', '=', $this->data()->groups), 'title')->first()->title;
-			return $title;
-		}
-	}
-	//method to either insert or create meta data for users in their meta table
-	public function UpdateMeta($fields = array()) {
-		$check = $this->_db->get('users_meta', array('user_id', '=', $this->data()->id));
-		if($check->count()) {
-			foreach ($fields as $key => $value) {
-				if(empty($value)) unset($fields[$key]);
-			}
-			$this->update($fields, null ,'users_meta','user_id');
-		} else {
-			//print_r($fields);
-			$this->create($fields, 'users_meta');
-		}
-	}
 	//method to move uploaded to final folder
 	public function movePic($pic) {
 		$name = uniqid(). ".jpg";					
-		$path = "img/";		//specifies the path to save the pic in
+		$path = "img/users/";		//specifies the path to save the pic in
 		if($dir = opendir($path)) {			//checks if the dir exist by opening it
 			closedir($dir);			//if the dir exist ie opens successfully,close it
 		} else {
-			$dir = "img/";
+			$dir = "img/users";
 			mkdir($dir);				//if the dir doesn't exist create it inside the pic folder
 		}
 
@@ -261,22 +216,6 @@ class User {
 			return $name;
 		}
 			return false;
-	}
-
-	//method on top of every page to determine users that can access that page
-	public function checkPermission($perm = array(), $view = true) {	
-	//$view set to false means those that cant view are specified in $perm
-		//eg $user->checkPermission(array('waybill')) means only waybill can view the page
-		//eg $user->checkPermission(array('waybill'), false) means only waybill cannot view the page
-		if($perm[0] == '*') {
-			return ($view) ? true: false;
-		}
-		foreach ($perm as $key => $value) {
-			if($this->hasPermission($value)) {
-				return ($view) ? true: false;
-			}
-		}
-		return ($view) ? false: true;
 	}
 	
 }

@@ -8,7 +8,8 @@ class Hash {
 	}
 
 	public static function salt($length) {
-		return mcrypt_create_iv($length);
+		//return mcrypt_create_iv($length);
+        return self::random_password($length);
 	}
 
 	public static function unique() {

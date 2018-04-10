@@ -26,4 +26,13 @@ class Card extends Action
         }
     }
 
+    public function deleteCard($id) {
+        $this->update(escape($id), array(
+            'status' => Config::get('status/deleted')
+        ));
+        //uncomment both lines to delete picture too
+        //$card = $this->get(['id', '=', escape($id)]);
+        //unlink($card[0]->link);
+    }
+
 }

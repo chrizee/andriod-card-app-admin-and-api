@@ -20,5 +20,20 @@ class SubCategories extends Categories
         $this->createDir(Input::get('name'),Input::get('parent'));
     }
 
+    public function deleteSubCategory($id) {
+        $this->update($id, array(
+            'status' => Config::get('status/deleted')
+        ));
+        $subCategory = $this->get(['id', '=', escape($id)]);
+        $cardObj = new Card();
+        $cards = $cardObj->get(['sub_category', '=', $subCategory[0]->id]);
+        if($cards) {
+            foreach ($cards as $key => $value) {
+                $cardObj->deleteCard($value->id);
+            }
+        }
+        //unlink($subCategory[0]->icon);
+    }
+
 
 }

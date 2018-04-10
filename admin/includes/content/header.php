@@ -91,8 +91,41 @@
         <span class="sr-only">Toggle navigation</span>
       </a>
 
-      <div class="navbar-custom-menu">
-      </div>
+        <div class="navbar-custom-menu">
+            <ul class="nav navbar-nav">
+                <!-- User Account: style can be found in dropdown.less -->
+                <li class="dropdown user user-menu">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        <img src="<?php echo (empty($user->data()->pic)) ? 'img/users/avatar-male.png' : "img/users/{$user->data()->pic}"?>" class="user-image" alt="User Image">
+                        <span class="hidden-xs"><?php echo ucwords($user->data()->name); ?></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <!-- User image -->
+                        <li class="user-header">
+                            <img src="<?php echo (empty($user->data()->pic)) ? 'img/users/avatar-male.png' : "img/users/{$user->data()->pic}"?>" class="img-circle" alt="User Image">
+
+                            <p>
+                                <?php echo ucwords($user->data()->name); ?> - Admin
+                                <small>Member since <?php $date = new DateTime($user->data()->created); echo $date->format('d-M-Y');?></small>
+                            </p>
+                        </li>
+                        <!-- Menu Footer-->
+                        <li class="user-footer">
+                            <div class="pull-left">
+                                <a href="profile" class="btn btn-default btn-flat">Profile</a>
+                            </div>
+                            <div class="pull-right">
+                                <a href="logout" class="btn btn-default btn-flat">Sign out</a>
+                            </div>
+                        </li>
+                    </ul>
+                </li>
+                <!-- Control Sidebar Toggle Button -->
+                <li>
+                    <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
+                </li>
+            </ul>
+        </div>
     </nav>
   </header>
   <!-- Left side column. contains the logo and sidebar -->
@@ -102,7 +135,7 @@
       <!-- Sidebar user panel -->
       <div class="user-panel">
         <div class="pull-left image">
-          <img src="<?php echo (empty($meta->pic_src)) ? 'img/avatar-male.png' : "img/{$meta->pic_src}"?>" class="img-circle" alt="User Image">
+          <img src="<?php echo (empty($user->data()->pic)) ? 'img/users/avatar-male.png' : "img/users/{$user->data()->pic}"?>" class="img-circle" alt="User Image">
         </div>
         <div class="pull-left info">
           <p><?php echo ucwords($user->data()->name); ?></p>
@@ -122,10 +155,14 @@
             <i class="fa fa-suitcase"></i> <span>Cards</span>
           </a>
         </li>
-
+          <li class="<?php if($query[0] == 'register') echo 'active'?>">
+              <a href="register">
+                  <i class="fa fa-user"></i> <span>Register</span>
+              </a>
+          </li>
         <li class="treeview">
           <a href="logout">
-            <i class="fa fa-dashboard"></i> <span>Logout</span>
+            <i class="fa fa-power-off"></i> <span>Logout</span>
           </a>
         </li>
 

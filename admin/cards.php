@@ -53,7 +53,7 @@ $categories = $categoryObj->get(['status', '=', Config::get('status/active')]);
                             <div class="form-group">
                                 <label for="name">Name</label>
                                 <div class="input-group" style="width: 100%;">
-                                    <input type="text" class="form-control" id="name" name="name" value="" required>
+                                    <input type="text" class="form-control" id="name" name="name" value="">
                                 </div>
                             </div>
 
@@ -143,7 +143,7 @@ $categories = $categoryObj->get(['status', '=', Config::get('status/active')]);
                     <!-- /.box-header -->
                     <div class="box-body">
                         <?php
-                            $card = $cardObj->get(array('name', '=', $Qstring));
+                            $card = $cardObj->get(array('name', '=', $Qstring, 'status', '=', Config::get('status/active')));
                             if(!empty($card)) {
                                 $value = $card[0];
                                     ?>
@@ -174,6 +174,7 @@ $categories = $categoryObj->get(['status', '=', Config::get('status/active')]);
                                             </div>
 
                                         <button class="btn btn-sm btn-primary pull-right edit">Edit</button>
+                                        <a href="deletecard=<?php echo $value->id; ?>"><button class="btn btn-sm btn-danger pull-left">Delete</button></a>
                                     </div>
                                     <div class="col-md-8 edit_form hidden">
                                         <h2>Edit <?php echo escape($Qstring);?></h2>
@@ -184,7 +185,7 @@ $categories = $categoryObj->get(['status', '=', Config::get('status/active')]);
                                             <div class="form-group">
                                                 <label for="name">Name</label>
                                                 <div class="input-group">
-                                                    <input type="text" class="form-control" id="name" name="name" value="<?php echo $value->name ?>" required>
+                                                    <input type="text" class="form-control" id="name" name="name" value="<?php echo $value->name ?>">
                                                 </div>
                                             </div>
 

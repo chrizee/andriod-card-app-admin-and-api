@@ -5,7 +5,6 @@ if(Input::exists() && !empty(Input::get('cardCreate'))) {
     $validate = new Validate();
     $validation = $validate->check($_POST, array(
         'name' => array(
-            'required' => true,
             'max' => '200',
         ),
     ));
@@ -26,9 +25,10 @@ if(Input::exists() && !empty(Input::get('cardCreate'))) {
             $subcategory = (!empty(Input::get('subcategory'))) ? Input::get('subcategory') : '';
             $table = (!empty($subcategory)) ? $categoryObj->getNameFromId(Input::get('category')).'/'.$subCategoryObj->getNameFromId($subcategory): $categoryObj->getNameFromId(Input::get('category')) ;
             if($link = $cardObj->save('card',$table)) {
+                $name = (!empty(Input::get('name'))) ? Input::get('name') : uniqid('card_');
                 $price = (!empty(Input::get('price'))) ? Input::get('price'): '';
                 $cardObj->create(array(
-                    'name' => Input::get('name'),
+                    'name' => $name,
                     'category' => Input::get('category'),
                     'sub_category' => $subcategory,
                     'tag' => Input::get('tag'),
@@ -56,7 +56,6 @@ if(Input::exists() && !empty(Input::get('cardEdit'))) {
     $validate = new Validate();
     $validation = $validate->check($_POST, array(
         'name' => array(
-            'required' => true,
             'max' => '200',
         ),
     ));
@@ -81,8 +80,9 @@ if(Input::exists() && !empty(Input::get('cardEdit'))) {
             $price = (!empty(Input::get('price2'))) ? Input::get('price2') : '';
             if(!empty($_FILES['card']['name'])) {
                 if ($link = $cardObj->save('card', $categoryObj->getNameFromId($category))) {
+                    $name = (!empty(Input::get('name'))) ? Input::get('name') : uniqid('card_');
                     $cardObj->update(Input::get('id'), array(
-                        'name' => Input::get('name'),
+                        'name' => $name,
                         'category' => $category,
                         'sub_category' => $subcategory,
                         'tag' => Input::get('tag2'),

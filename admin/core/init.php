@@ -17,7 +17,7 @@ $GLOBALS['config'] = array(
 		'designer' => "CEO",
 	),
 	'cards' => array(
-		'max_size' => 1000000,
+		'max_size' => 2000000,
 		'formats' => array('image/jpeg', 'image/png', 'image/gif'),
 	),
 	'mysql' => array(

@@ -9,6 +9,13 @@
 	$route = new Routes();
 	$route->add('/');
 	$route->add('/logout');
+	$route->add('/register');
+	$route->add('/adduser');
+	$route->add('profile');
+	$route->add('updateuser');
+	$route->add('deletecard');
+	$route->add('deletecategory');
+	$route->add('deletesubcategory');
 	$route->add('/categories');
 	$route->add('/cards');
 	$route->add('/login');

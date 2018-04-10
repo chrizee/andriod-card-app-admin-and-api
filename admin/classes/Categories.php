@@ -56,7 +56,7 @@ class Categories extends Action
     public function exists($id, $name = false, $field = 'id') {
         if($id) {
             try {
-                $data = $this->get(array($field, '=', $id), 'id, name');
+                $data = $this->get(array($field, '=', $id, 'status', '=', Config::get('status/active')), 'id, name');
                 if (count($data)) {
                     return $data;
                 }
@@ -65,7 +65,7 @@ class Categories extends Action
             }
         }
         if($name) {
-            $data = $this->get(array('name', '=', $name));
+            $data = $this->get(array('name', '=', $name, 'status', '=', Config::get('status/active')));
             if(count($data)) {
                 return $data[0];
             }
@@ -78,5 +78,28 @@ class Categories extends Action
         $subData = $this->exists($id,false,'parent');
         $this->_table = 'categories';
         return $subData;
+    }
+
+    public function deleteCategory($id) {
+        $this->update(escape($id), array(
+            'status' => Config::get('status/deleted')
+        ));
+        $category = $this->get(['id', '=', escape($id)]);
+        $subCategoryObj = new SubCategories();
+        $cardObj = new Card();
+        $subCategory = $subCategoryObj->get(['parent', '=', $category[0]->id]);
+        $cards = $cardObj->get(['category', '=', $category[0]->id, 'sub_category', '=', Config::get('status/deleted')]);
+        if($cards) {
+            foreach ($cards as $key => $value) {
+                $cardObj->deleteCard($value->id);
+            }
+        }
+
+        if($subCategory) {
+            foreach ($subCategory as $key => $value) {
+                $subCategoryObj->deleteSubCategory($value->id);
+            }
+        }
+        //unlink($category[0]->icon);
     }
 }
