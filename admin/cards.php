@@ -50,6 +50,7 @@ $categories = $categoryObj->get(['status', '=', Config::get('status/active')]);
                     </div>
                     <div class="box-body">
                         <form role="form" method="post" name="card" id="card" enctype="multipart/form-data" action="addcard">
+                            <input type="hidden" name="noOfFiles" value="1"/>
                             <div class="form-group">
                                 <label for="name">Name</label>
                                 <div class="input-group" style="width: 100%;">
@@ -121,11 +122,16 @@ $categories = $categoryObj->get(['status', '=', Config::get('status/active')]);
                                 <label for="inputPhoto" >Card</label>
                                 <div class="input-group">
                                     <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo Config::get('cards/max_size')?>" />
-                                    <input type="file" class="form-control" id="inputPhoto" name="card" required>
+                                    <input type="file" class="form-control" id="inputPhoto" name="card0" required>
                                 </div>
                             </div>
 
                         </form>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <button class="btn btn-sm btn-warning pull-right" name="addMoreFiles"><i class="fa fa-plus"></i> Add more cards</button>
+                            </div>
+                        </div>
                     </div>
                     <div class="box-footer">
                         <input type="submit" form="card" class="btn btn-primary" name="cardCreate" value="Add Card">
@@ -191,16 +197,14 @@ $categories = $categoryObj->get(['status', '=', Config::get('status/active')]);
 
                                             <div class="form-group">
                                                 <label for="category">Category</label>
-                                                <div class="input-group">
-                                                    <select style="text-transform:capitalize;" class="form-control select2" name="category" style="width: 100%;" required>
-                                                        <option value="">--select--</option>
-                                                        <?php
-                                                        foreach ($categories as $value2) { ?>
-                                                            <option value="<?php echo $value2->id; ?>" <?php if($value->category == $value2->id) echo "selected"?>><?php echo $value2->name; ?></option>
-                                                        <?php } ?>
-                                                       <!-- <option value="new">new category</option>-->
-                                                    </select>
-                                                </div>
+                                                <select style="text-transform:capitalize;" class="form-control select2" name="category" style="width: 100%;" required>
+                                                    <option value="">--select--</option>
+                                                    <?php
+                                                    foreach ($categories as $value2) { ?>
+                                                        <option value="<?php echo $value2->id; ?>" <?php if($value->category == $value2->id) echo "selected"?>><?php echo $value2->name; ?></option>
+                                                    <?php } ?>
+                                                   <!-- <option value="new">new category</option>-->
+                                                </select>
                                             </div>
 
                                             <div class="form-group <?php echo ($value->sub_category == 0) ? 'hidden': ''; ?> subcategory">
@@ -276,7 +280,7 @@ $categories = $categoryObj->get(['status', '=', Config::get('status/active')]);
             }else {
                 var $id = $(this).val();
                 $.post('_checkforsub', {id: $id}, function($result) {
-                    //console.log($result);
+
                   if($result != 'X'){
                       $sub = JSON.parse($result);
                       $('div.subcategory').removeClass('hidden');
@@ -322,6 +326,17 @@ $categories = $categoryObj->get(['status', '=', Config::get('status/active')]);
                 $('div.price2').addClass('hidden');
                 $('input[name=price2]').removeAttr('required');
             }
+        }).on('click', "button[name=addMoreFiles]", function(e) {
+            $files = parseInt($("input[name=noOfFiles]").val());
+            $("input[name=noOfFiles]").val($files + 1);
+            $("form[name=card]").append(
+               "<div class='form-group'>"+
+                "<label for='inputPhoto'>Card " + ($files + 1) + "</label>"+
+                "<div class='input-group' style='width: 100%;'>"+
+                "<input type='file' class='form-control' id='inputPhoto' name='card" + $files + "'>"+
+                "</div>"+
+                "</div>"
+            );
         })
     })
 </script>

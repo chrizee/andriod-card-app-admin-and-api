@@ -101,18 +101,16 @@ $categories = $categoryObj->get(['status', '=', Config::get('status/active')]);
                                 }
                                 ?>
                                 <div class="row">
-                                    <div class="col-md-12" style="border-bottom: 1px dashed blue;">
-                                        <div class="col-md-4">
-                                            <h4 class="text text-center text-success"><?php echo ucwords($folder) ?> Icon</h4>
-                                            <figure style="height:260px;">
-                                                <img src="<?php echo $cat[0]->icon ?>" alt="icon" class="thumbnail img-responsive">
-                                            </figure>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <a href="delete<?php echo str_replace(' ', '', $folder)."=".$cat[0]->id;?>">
-                                                <button class="btn btn-sm btn-danger" title="This will delete all cards in this category/subcategory">Delete <?php echo $folder; ?></button>
-                                            </a>
-                                        </div>
+                                    <div class="col-md-4">
+                                        <h4 class="text text-center text-success"><?php echo ucwords($folder) ?> Icon</h4>
+                                        <figure style="height:260px;">
+                                            <img src="<?php echo $cat[0]->icon ?>" alt="icon" class="thumbnail img-responsive">
+                                        </figure>
+                                    </div>
+                                    <div class="col-md-4" style="margin-top: 3em;">
+                                        <a href="delete<?php echo str_replace(' ', '', $folder)."=".$cat[0]->id;?>">
+                                            <button class="btn btn-sm btn-danger" title="This will delete all cards in this category/subcategory">Delete <?php echo $folder; ?></button>
+                                        </a>
                                     </div>
                                 </div>
                                 <?php if(!empty($card)) {
@@ -271,6 +269,7 @@ $categories = $categoryObj->get(['status', '=', Config::get('status/active')]);
 <!-- /.content-wrapper -->
 <script type="text/javascript">
     $(document).ready(function() {
+        $('div.input-group').css("width", "100%");
         $(document).on('click', "button.add_new", function() {
             $('div.create').removeClass('hidden');
             $('div.default').addClass('hidden');
