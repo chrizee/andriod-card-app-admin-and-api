@@ -1,11 +1,4 @@
 <?php
-
-/**
- * Created by PhpStorm.
- * User: OKORO EFE
- * Date: 2/3/2018
- * Time: 9:30 AM
- */
 class Card extends Action
 {
     protected $_table = "cards";
@@ -30,9 +23,9 @@ class Card extends Action
         $this->update(escape($id), array(
             'status' => Config::get('status/deleted')
         ));
-        //uncomment both lines to delete picture too
-        //$card = $this->get(['id', '=', escape($id)]);
-        //unlink($card[0]->link);
+        if($this->delete) {
+            $card = $this->get(['id', '=', escape($id)]);
+            unlink($card[0]->link);
+        }
     }
-
 }

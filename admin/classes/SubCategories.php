@@ -1,11 +1,5 @@
 <?php
 
-/**
- * Created by PhpStorm.
- * User: OKORO EFE
- * Date: 3/27/2018
- * Time: 5:46 AM
- */
 class SubCategories extends Categories
 {
     protected $_table = 'sub_categories';
@@ -32,8 +26,8 @@ class SubCategories extends Categories
                 $cardObj->deleteCard($value->id);
             }
         }
-        //unlink($subCategory[0]->icon);
+        if($this->delete) {
+            @unlink($subCategory[0]->icon);
+        }
     }
-
-
 }

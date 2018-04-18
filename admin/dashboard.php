@@ -107,10 +107,40 @@ $categories = $categoryObj->get(['status', '=', Config::get('status/active')]);
                                             <img src="<?php echo $cat[0]->icon ?>" alt="icon" class="thumbnail img-responsive">
                                         </figure>
                                     </div>
-                                    <div class="col-md-4" style="margin-top: 3em;">
+                                    <div class="col-md-4 actionButtons" style="margin-top: 3em;">
                                         <a href="delete<?php echo str_replace(' ', '', $folder)."=".$cat[0]->id;?>">
-                                            <button class="btn btn-sm btn-danger" title="This will delete all cards in this category/subcategory">Delete <?php echo $folder; ?></button>
+                                            <button class="btn btn-sm btn-danger deleteCat" title="This will delete all cards in this category/subcategory">Delete <?php echo $folder; ?></button>
                                         </a>
+                                        <p class="clearfix"></p>
+                                        <button class="btn btn-sm btn-warning editCategory">Edit <?php echo $folder; ?></button>
+                                    </div>
+                                    <div class="col-md-5 editCategory hidden">
+                                        <div class="box-body">
+                                            <form role="form" class="" method="post" action="addcategory" id="editCategory" enctype="multipart/form-data">
+                                                <input type="hidden" name="sub" value="<?php echo (isset($cat[0]->parent)) ? "1" : "0" ?>" />
+                                                <input type="hidden" name="id" value="<?php echo $cat[0]->id; ?>">
+                                                <div class="form-group">
+                                                    <label for="name">Name of category</label>
+                                                    <div class="input-group">
+                                                        <input type="text" class="form-control" id="name" name="name" value="<?php echo escape($cat[0]->name)?>" required>
+
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="inputPhoto" >Category icon</label>
+
+                                                    <div class="input-group">
+                                                        <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo Config::get('cards/max_size')?>" />
+                                                        <input type="file" class="form-control" id="inputPhoto" name="icon">
+
+                                                    </div>
+                                                </div>
+                                                <div class="box-footer">
+                                                    <input type="submit" class="btn btn-primary" name="editCategory" value="Update">
+                                                </div>
+                                            </form>
+                                        </div>
                                     </div>
                                 </div>
                                 <?php if(!empty($card)) {
@@ -270,6 +300,7 @@ $categories = $categoryObj->get(['status', '=', Config::get('status/active')]);
 <script type="text/javascript">
     $(document).ready(function() {
         $('div.input-group').css("width", "100%");
+        $('figure').css('overflow', 'hidden');
         $(document).on('click', "button.add_new", function() {
             $('div.create').removeClass('hidden');
             $('div.default').addClass('hidden');
@@ -281,6 +312,17 @@ $categories = $categoryObj->get(['status', '=', Config::get('status/active')]);
                 $(this).value = 0;
                 $('div.mainCat').slideUp('slow');
                 $('select[name=category]').removeAttr('required');
+            }
+        }).on('click', "button.editCategory", function(e) {
+            $("div.actionButtons").addClass('hidden');
+            $("div.editCategory").removeClass('hidden');
+        }).on('click', "button.deleteCat", function(e) {
+            $ans = confirm("Are you sure you want to delete this <?php echo (!empty($folder)) ? $folder : ''; ?>");
+            if($ans) {
+                $location = $(this).parent('a').attr('href');
+                //window.location.href = $location;
+            }else {
+                e.preventDefault();
             }
         })
 

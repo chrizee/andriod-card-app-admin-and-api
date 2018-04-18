@@ -15,6 +15,7 @@ $GLOBALS['config'] = array(
 		'currency' => 'N',
 		'copyright' => "valence solutions",
 		'designer' => "CEO",
+        'delete_files_permanently' => 1
 	),
 	'cards' => array(
 		'max_size' => 2000000,

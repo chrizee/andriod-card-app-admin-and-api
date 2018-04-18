@@ -92,7 +92,7 @@ class Validate {
 	}
 
 	//method to add message to the errors array
-	private function addError($error) {
+	public function addError($error) {
 		$this->_errors[] = $error;
 	}
 
@@ -195,6 +195,37 @@ class Validate {
                     break;
                 case UPLOAD_ERR_FORM_SIZE:
                     $this->addError("The photo is larger than the script allows.");
+                    break;
+            }
+
+        }
+        if(empty($this->_errors)) {
+            $this->_passed = true;
+        } else {
+            $this->_passed = false;
+        }
+        return $this;
+    }
+
+    public function checkCard($pic, $key) {
+        if ($_FILES[$pic]["error"][$key] == UPLOAD_ERR_OK and !empty($_FILES[$pic]) ) {
+
+            if (!in_array($_FILES[$pic]["type"][$key], Config::get('cards/formats'))) {
+                $this->addError("jpeg/jpg/png/gif photos only");
+            }
+            if ($_FILES[$pic]["size"][$key] > Config::get('cards/max_size') ) {
+                $this->addError("Photo size must be less than 1MB");
+            }
+        } else {
+            switch( $_FILES[$pic]["error"][$key] ) {
+                case UPLOAD_ERR_INI_SIZE:
+                    $this->addError("The photo is larger than the server allows.");
+                    break;
+                case UPLOAD_ERR_FORM_SIZE:
+                    $this->addError("The photo is larger than the script allows.");
+                    break;
+                case UPLOAD_ERR_NO_FILE:
+                    $this->addError("No file was uploaded. Make sure you choose a file to upload.");
                     break;
             }
 

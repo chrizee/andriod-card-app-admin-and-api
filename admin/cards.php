@@ -66,7 +66,6 @@ $categories = $categoryObj->get(['status', '=', Config::get('status/active')]);
                                     foreach ($categories as $value) { ?>
                                         <option value=<?php echo $value->id; ?>><?php echo $value->name; ?></option>
                                     <?php } ?>
-                                    <!--<option value="new">new category</option>-->
                                 </select>
                             </div>
 
@@ -76,31 +75,7 @@ $categories = $categoryObj->get(['status', '=', Config::get('status/active')]);
 
                                 </select>
                             </div>
-                            <?php /*?>
-                            <!--<div class="form-group new_category hidden">
-                                <label for="cat_name">New Category</label>
-                                <div class="input-group">
-                                    <input type="text" class="form-control" id="cat_name" name="cat_name" value="">
-                                </div>
-                            </div>
 
-                            <div class="form-group new_sub_category hidden">
-                                <label for="sub_cat_name">New Sub Category</label>
-                                <div class="input-group" style="width: 100%;">
-                                    <input type="text" class="form-control" id="sub_cat_name" name="sub_cat_name" value="">
-                                </div>
-                            </div>
-
-                            <div class="form-group sub_category_icon hidden">
-                                <label for="inputPhoto" >Sub Category Icon</label>
-
-                                <div class="input-group">
-                                    <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo Config::get('cards/max_size')?>" />
-                                    <input type="file" class="form-control" id="inputPhoto" name="icon">
-
-                                </div>
-                            </div>-->
-                            <?php */ ?>
                             <div class="form-group">
                                 <label>Tag &nbsp;</label>
                                 <label>
@@ -122,16 +97,17 @@ $categories = $categoryObj->get(['status', '=', Config::get('status/active')]);
                                 <label for="inputPhoto" >Card</label>
                                 <div class="input-group">
                                     <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo Config::get('cards/max_size')?>" />
-                                    <input type="file" class="form-control" id="inputPhoto" name="card0" required>
+                                    <input type="file" class="form-control" id="inputPhoto" name="card[]" required multiple>
                                 </div>
                             </div>
 
                         </form>
-                        <div class="form-group">
+
+                        <!--<div class="form-group">
                             <div class="input-group">
                                 <button class="btn btn-sm btn-warning pull-right" name="addMoreFiles"><i class="fa fa-plus"></i> Add more cards</button>
                             </div>
-                        </div>
+                        </div>-->
                     </div>
                     <div class="box-footer">
                         <input type="submit" form="card" class="btn btn-primary" name="cardCreate" value="Add Card">
@@ -160,12 +136,12 @@ $categories = $categoryObj->get(['status', '=', Config::get('status/active')]);
                                                     <img src="<?php echo $value->link?>" alt="card" class="img-responsive">
                                                 </figure>
                                                 <div class="fh5co-property-innter">
-                                                    <h3 class="head">Category: <a href="categories=<?php echo $categoryObj->getNameFromId($value->category)?>"><?php echo $categoryObj->getNameFromId($value->category) ?></a></h3>
+                                                    <h3 class="head">Category: <a href="dashboard=<?php echo $categoryObj->getNameFromId($value->category)?>"><?php echo $categoryObj->getNameFromId($value->category) ?></a></h3>
                                                     <?php
                                                         if($value->sub_category != 0) {
                                                             ?>
                                                             <h5 class="head">Sub category:<a
-                                                                        href="categories=<?php echo $subCategoryObj->getNameFromId($value->sub_category) ?>"><?php echo $subCategoryObj->getNameFromId($value->sub_category) ?></a>
+                                                                        href="dashboard=<?php echo $subCategoryObj->getNameFromId($value->sub_category) ?>"><?php echo $subCategoryObj->getNameFromId($value->sub_category) ?></a>
                                                             </h5>
                                                             <?php
                                                         }
@@ -326,7 +302,7 @@ $categories = $categoryObj->get(['status', '=', Config::get('status/active')]);
                 $('div.price2').addClass('hidden');
                 $('input[name=price2]').removeAttr('required');
             }
-        }).on('click', "button[name=addMoreFiles]", function(e) {
+        })/*.on('click', "button[name=addMoreFiles]", function(e) {
             $files = parseInt($("input[name=noOfFiles]").val());
             $("input[name=noOfFiles]").val($files + 1);
             $("form[name=card]").append(
@@ -337,7 +313,7 @@ $categories = $categoryObj->get(['status', '=', Config::get('status/active')]);
                 "</div>"+
                 "</div>"
             );
-        })
+        })*/
     })
 </script>
 <?php

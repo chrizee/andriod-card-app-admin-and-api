@@ -8,14 +8,11 @@ if(Input::exists() && !empty(Input::get('cardCreate'))) {
             'max' => '200',
         ),
     ));
-
-    for ($i = 0; $i < count($_FILES); $i++) {
-        $key = "card".$i;
-        if (empty($_FILES[$key]['name'])) {
-            $validation->errors[] = "No file was uploaded. Make sure you choose a file to upload";
+    for ($i = 0; $i < count($_FILES['card']['name']); $i++) {
+        if (empty($_FILES['card']['name'][$i])) {
+            $validation->addError("Some files are missing. Make sure you choose a file to upload");
         }else {
-            print_r($_FILES[$key]);
-            $validation->checkPic($key);
+            $validation->checkCard('card', $i);
         }
     }
 
@@ -24,10 +21,10 @@ if(Input::exists() && !empty(Input::get('cardCreate'))) {
             $subcategory = (!empty(Input::get('subcategory'))) ? Input::get('subcategory') : '';
             $table = (!empty($subcategory)) ? $categoryObj->getNameFromId(Input::get('category')).'/'.$subCategoryObj->getNameFromId($subcategory): $categoryObj->getNameFromId(Input::get('category')) ;
             $price = (!empty(Input::get('price'))) ? Input::get('price'): '';
-            for ($i = 0; $i < count($_FILES); $i++) {
-                $key = "card".$i;
-                $name = (!empty(Input::get('name'))) ? Input::get('name').$i : uniqid('card_');
-                if($link = $cardObj->save($key,$table)) {
+            $msg = '';
+            for ($i = 0; $i < count($_FILES['card']['name']); $i++) {
+                $name = (!empty(Input::get('name'))) ? Input::get('name')."_".$i : uniqid('card_');
+                if ($link = $cardObj->save('card',$table,$i)) {
                     $cardObj->create(array(
                         'name' => $name,
                         'category' => Input::get('category'),
@@ -37,9 +34,10 @@ if(Input::exists() && !empty(Input::get('cardCreate'))) {
                         'link' => $link,
                     ));
                 }
+                $msg = count($_FILES['card']['name'])." card(s) added";
             }
-                Session::flash('home', Input::get('name')." added");
-                Redirect::to("cards=".Input::get('name'));
+                Session::flash('home', $msg);
+                Redirect::to("cards=".$name);
                 //Session::flash('home', "Cannot move card to specified folder. Please select the correct category");
         } catch (Exception $e) {
             print_r($e->getMessage());

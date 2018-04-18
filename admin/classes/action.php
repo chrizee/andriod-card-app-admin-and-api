@@ -1,6 +1,6 @@
 <?php
 	class Action {
-
+        public $delete;
 		//method to get data from non static classes like drivers etc
 		public function get($where =  array('1', '=', '1'), $fields = '*') {
 			if(!$data = DB::getInstance()->get($this->_table, $where, $fields)) {
@@ -9,6 +9,9 @@
 			return $data->results();
 		}
 
+		public function __construct() {
+		    $this->delete = Config::get('app/delete_files_permanently');
+        }
 		//method to create record in non static classes like drivers etc
 		public function create($fields = array()) {
 			if(!DB::getInstance()->insert($this->_table, $fields)) {
@@ -35,19 +38,25 @@
 			return $lastId;
 		}
 
-        public function save($pic, $table) {
+        public function save($pic, $table, $key = 'no') {
             if($table) {
                 $name = uniqid(). ".jpg";
                 $path = "img/".$table."/";
-                if($dir = opendir($path)) {			//checks if the dir exist by opening it
+                if($dir = @opendir($path)) {			//checks if the dir exist by opening it
                     closedir($dir);			//if the dir exist ie opens successfully,close it
                 } else {
                     $dir = "img/".$table;
                     mkdir($dir);				//if the dir doesn't exist create it inside the pic folder
                 }
                 $filename = $path.$name;
-                if(move_uploaded_file($_FILES[$pic]['tmp_name'], $filename)){
-                    return $filename;
+                if($key !== 'no') {
+                    if(move_uploaded_file($_FILES[$pic]['tmp_name'][$key], $filename)){ //for multiple uploads
+                        return $filename;
+                    }
+                }elseif($key === 'no') {
+                    if (move_uploaded_file($_FILES[$pic]['tmp_name'], $filename)) {
+                        return $filename;
+                    }
                 }
             }
             return false;

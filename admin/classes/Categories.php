@@ -1,11 +1,5 @@
 <?php
 
-/**
- * Created by PhpStorm.
- * User: OKORO EFE
- * Date: 2/3/2018
- * Time: 6:25 AM
- */
 class Categories extends Action
 {
     protected $_table = "categories";
@@ -89,6 +83,7 @@ class Categories extends Action
         $cardObj = new Card();
         $subCategory = $subCategoryObj->get(['parent', '=', $category[0]->id]);
         $cards = $cardObj->get(['category', '=', $category[0]->id, 'sub_category', '=', Config::get('status/deleted')]);
+        //rmdir("img/".$this->getNameFromId($id));
         if($cards) {
             foreach ($cards as $key => $value) {
                 $cardObj->deleteCard($value->id);
@@ -100,6 +95,31 @@ class Categories extends Action
                 $subCategoryObj->deleteSubCategory($value->id);
             }
         }
-        //unlink($category[0]->icon);
+        if($this->delete) {
+            @unlink($category[0]->icon);
+        }
+    }
+
+    public function edit() {
+        try {
+            if (!empty($_FILES['icon']['name'])) {
+                $link = $this->save('icon', 'icons');
+                $oldPic = $this->get(['id', '=', Input::get('id')])[0]->icon;
+                $this->update(Input::get('id'), array(
+                    'name' => Input::get('name'),
+                    'icon' => $link,
+                ));
+                if ($this->delete) {
+                    @unlink($oldPic);
+                }
+            } else {
+                $this->update(Input::get('id'), array(
+                    'name' => Input::get('name')
+                ));
+            }
+            $this->createDir(Input::get('name'));
+        } catch (Exception $e) {
+            print_r($e->getMessage());
+        }
     }
 }
