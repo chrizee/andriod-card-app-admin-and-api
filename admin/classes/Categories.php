@@ -3,6 +3,7 @@
 class Categories extends Action
 {
     protected $_table = "categories";
+    protected $order = "order_by";
 
     public function getIdFromName($name) {
         $id = $this->get(array('name', '=', $name), "id");
@@ -121,5 +122,21 @@ class Categories extends Action
         } catch (Exception $e) {
             print_r($e->getMessage());
         }
+    }
+
+    public function sort(array $arr) {
+        if(is_array($arr)) {
+            try {
+                foreach ($arr as $key => $value) {
+                    $this->update($value,
+                        ['order_by' => $key]
+                    );
+                }
+                return true;
+            } catch (Exception $e) {
+                print_r($e->getMessage());
+            }
+        }
+        return false;
     }
 }

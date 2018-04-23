@@ -7,9 +7,13 @@
     $subCategoryObj = new SubCategories();
     $cardObj = new Card();
 	$route = new Routes();
+    $linkObj = new Link();
 	$route->add('/');
 	$route->add('/logout');
 	$route->add('/register');
+	$route->add('other_app_link');
+	$route->add('addlink');
+	$route->add('savesort');
 	$route->add('/adduser');
 	$route->add('profile');
 	$route->add('updateuser');

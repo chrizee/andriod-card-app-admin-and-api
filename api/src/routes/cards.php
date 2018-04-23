@@ -111,3 +111,17 @@ $app->get('/categories/{id}/main', function(Request $request, Response $response
         echo '{"error": {"text": '.$e->getMessage().'} }';
     }
 });
+//get link to other apps
+$app->get('/link', function(Request $request, Response $response) {
+    try {
+        $category = $request->getAttribute('id');
+        $linkObj = new Link();
+        $link = $linkObj->get([1, '=', 1]);
+        if(!empty($link)) {
+            $link = ['link' => $link[0]->link];
+            echo json_encode($link);
+        }
+    } catch(PDOException $e) {
+        echo '{"error": {"text": '.$e->getMessage().'} }';
+    }
+});

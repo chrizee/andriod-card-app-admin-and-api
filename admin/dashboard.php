@@ -20,6 +20,7 @@ $categories = $categoryObj->get(['status', '=', Config::get('status/active')]);
             }
         }
         ?>
+        <p class="text text-center text-info msg hidden"></p>
         <ol class="breadcrumb">
             <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
             <li class="active">Categories</li>
@@ -31,7 +32,7 @@ $categories = $categoryObj->get(['status', '=', Config::get('status/active')]);
         <div class="row">
             <div class="col-md-3">
                 <button class="btn btn-primary btn-block margin-bottom add_new">Add new category</button>
-
+                <!--<a href="sortcategories"><button class="btn btn-warning btn-block margin-bottom">Sort Categories</button></a>-->
                 <div class="box box-solid">
                     <div class="box-header with-border">
                         <h3 class="box-title">Categories</h3>
@@ -42,15 +43,15 @@ $categories = $categoryObj->get(['status', '=', Config::get('status/active')]);
                         </div>
                     </div>
                     <div class="box-body no-padding">
-                        <ul class="nav nav-pills nav-stacked">
-                            <li <?php if(!$Qstring) echo "class=\"active\""?>><a href="dashboard"><i class="fa fa-asterisk"></i> All
+                        <ul class="nav nav-pills nav-stacked" id="categories">
+                            <!--<li <?php if(!$Qstring) echo "class=\"active\""?>><a href="dashboard"><i class="fa fa-asterisk"></i> All
                                     <span class="label label-primary"><?php echo Card::getTotal(); ?></span></a>
-                            </li>
+                            </li>-->
                             <?php if(!empty($categories)) {
                                 foreach ($categories as $key => $value) { ?>
                                     <li class="<?php if($sublist = $categoryObj->hasSubCategories($value->id)) echo 'dropdown';
                                     if(html_entity_decode($Qstring) == $value->name) echo 'active ';
-                                    ?>">
+                                    ?>" title="<?php echo $value->id ?>">
                                         <a <?php echo (!empty($sublist)) ? "style=\"display: inline-block; width: 80%;\"": '' ?>" href="dashboard=<?php echo htmlentities($value->name);?>">
                                             <i class="fa fa-inbox"></i> <?php echo ucfirst($value->name)?>
                                             <span class="label label-primary"><?php echo Card::getTotal($value->id); ?></span>
@@ -113,6 +114,23 @@ $categories = $categoryObj->get(['status', '=', Config::get('status/active')]);
                                         </a>
                                         <p class="clearfix"></p>
                                         <button class="btn btn-sm btn-warning editCategory">Edit <?php echo $folder; ?></button>
+                                        <?php
+                                            if($folder == 'category'){
+                                        ?>
+                                        <button class="btn btn-sm btn-primary sortSub">Sort subcategories</button>
+                                            <?php }?>
+                                    </div>
+                                    <div class="col-md-6 sortSub hidden">
+                                        <ul class="list-group" id="subCategories">
+                                        <?php
+                                            $sublist = $categoryObj->hasSubCategories($categoryObj->getIdFromName($Qstring));
+                                            if(count($sublist)) {
+                                                foreach ($sublist as $key => $value) {?>
+                                                    <li class="list-group-item" title="<?php echo $value->id?>"><?php echo $value->name?></li>
+                                                <?php }
+                                            }
+                                        ?>
+                                        </ul>
                                     </div>
                                     <div class="col-md-5 editCategory hidden">
                                         <div class="box-body">
@@ -297,6 +315,7 @@ $categories = $categoryObj->get(['status', '=', Config::get('status/active')]);
     <!-- /.content -->
 </div>
 <!-- /.content-wrapper -->
+    <script type="text/javascript" src="plugins/jQueryUI/jquery-ui.js"></script>
 <script type="text/javascript">
     $(document).ready(function() {
         $('div.input-group').css("width", "100%");
@@ -324,8 +343,43 @@ $categories = $categoryObj->get(['status', '=', Config::get('status/active')]);
             }else {
                 e.preventDefault();
             }
-        })
-
+        }).on('click',"button.sortSub", function(e) {
+            $("div.sortSub").removeClass('hidden');
+            $('div.editCategory, div.actionButtons').addClass('hidden');
+        });
+        var saveUpdate = function(e, ui) {
+            var $data = $(this).sortable(
+                'serialize', {
+                    attribute: 'title',
+                    expression: /^(.*)$/,
+                    key: 'order'
+                }
+            );
+            var $sub = 0;
+            if($(this).attr('id') === "subCategories") {
+                $sub = 1;
+            }
+            $.post('savesort', {'categories': $data, 'sub': $sub}, function ($result){
+                    if($result == '1'){
+                        $msg = "Settings saved";
+                    }else {
+                        $msg = "Something went wrong. please try again";
+                    }
+                    $("section.content-header p.msg").removeClass('hidden').fadeIn('slow').text($msg).fadeOut('6000');
+                }
+            )
+        };
+        $('ul#categories').sortable({
+            opacity: 0.8,
+            cursor: 'move',
+            update: saveUpdate
+        });
+        //$("ul#categories li").filter(":first-child").sortable('destroy');
+        $('ul#subCategories').sortable({
+            opacity: 0.8,
+            cursor: 'move',
+            update: saveUpdate
+        });
     })
 </script>
 <?php

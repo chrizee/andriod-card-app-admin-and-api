@@ -54,7 +54,7 @@ class DB {
 	}
 
 	//prototype method for mysql actions
-	public  function action($action, $table, $where = array()) {
+	public  function action($action, $table, $where = array(), $order = "id DESC") {
 		$operators = array('=', '>', '<', '>=', '<=', '<>', '<=>', '!=', 'LIKE');
 		if(count($where) % 3 == 0) {
 			$z = count($where) / 3;
@@ -75,7 +75,7 @@ class DB {
 					return false;
 				}
 			}
-			$sql = "{$action} FROM {$table} WHERE ".$wherestr. " ORDER BY id DESC";
+			$sql = "{$action} FROM {$table} WHERE ".$wherestr. " ORDER BY ". $order;
 			//print_r($sql);
 			if(!$this->query($sql,$value)->error()) {
 				return $this;
@@ -85,8 +85,8 @@ class DB {
 		return false;
 	}
 
-	public function get($table, $where, $fields = '*') {
-		return $this->action("SELECT {$fields}", $table, $where);
+	public function get($table, $where, $fields = '*', $order = "id DESC") {
+		return $this->action("SELECT {$fields}", $table, $where, $order);
 	}
 
 	public function delete($table, $where) {

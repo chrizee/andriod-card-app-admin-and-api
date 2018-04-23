@@ -160,6 +160,11 @@
                   <i class="fa fa-user"></i> <span>Register</span>
               </a>
           </li>
+          <li class="<?php if($query[0] == 'other_app_link') echo 'active'?>">
+              <a href="other_app_link">
+                  <i class="fa fa-user"></i> <span>Link to other apps</span>
+              </a>
+          </li>
         <li class="treeview">
           <a href="logout">
             <i class="fa fa-power-off"></i> <span>Logout</span>

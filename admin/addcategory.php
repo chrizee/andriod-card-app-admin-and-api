@@ -8,7 +8,7 @@ if(Input::exists() && !empty(Input::get('category'))) {
             'max' => '50',
         )
     ));
-    if(empty($_FILES['card'])) {
+    if(empty($_FILES['icon'])) {
         $validation->addError("No file was uploaded. Make sure you choose a file to upload");
     }
     $validation->checkPic('icon');
@@ -50,11 +50,11 @@ if(Input::exists() && !empty(Input::get('editCategory'))) {
         try {
             if(Input::get('sub') == '1'){
                 $subCategoryObj->edit();
-                Session::flash('home', "Category updated");
+                Session::flash('home', "Subcategory updated");
                 Redirect::to("dashboard=" . Input::get('name'));
             }else {
                 $categoryObj->edit();
-                Session::flash('home', "Subcategory updated");
+                Session::flash('home', "Category updated");
                 Redirect::to("dashboard=" . Input::get('name'));
             }
         } catch (Exception $e) {
