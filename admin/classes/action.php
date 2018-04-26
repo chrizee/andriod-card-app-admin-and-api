@@ -41,7 +41,6 @@
 
         public function save($pic, $table, $key = 'no') {
             if($table) {
-                $name = uniqid(). ".jpg";
                 $path = "img/".$table."/";
                 if($dir = @opendir($path)) {			//checks if the dir exist by opening it
                     closedir($dir);			//if the dir exist ie opens successfully,close it
@@ -49,12 +48,15 @@
                     $dir = "img/".$table;
                     mkdir($dir);				//if the dir doesn't exist create it inside the pic folder
                 }
-                $filename = $path.$name;
                 if($key !== 'no') {
+                    $type = explode('/', $_FILES[$pic]['type'][$key])[1];
+                    $filename = $path.uniqid().".".$type;
                     if(move_uploaded_file($_FILES[$pic]['tmp_name'][$key], $filename)){ //for multiple uploads
                         return $filename;
                     }
                 }elseif($key === 'no') {
+                    $type = explode('/', $_FILES[$pic]['type'][0])[1];
+                    $filename = $path.uniqid().".".$type;
                     if (move_uploaded_file($_FILES[$pic]['tmp_name'], $filename)) {
                         return $filename;
                     }

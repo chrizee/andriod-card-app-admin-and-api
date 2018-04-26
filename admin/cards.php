@@ -103,11 +103,6 @@ $categories = $categoryObj->get(['status', '=', Config::get('status/active')]);
 
                         </form>
 
-                        <!--<div class="form-group">
-                            <div class="input-group">
-                                <button class="btn btn-sm btn-warning pull-right" name="addMoreFiles"><i class="fa fa-plus"></i> Add more cards</button>
-                            </div>
-                        </div>-->
                     </div>
                     <div class="box-footer">
                         <input type="submit" form="card" class="btn btn-primary" name="cardCreate" value="Add Card">
@@ -141,7 +136,7 @@ $categories = $categoryObj->get(['status', '=', Config::get('status/active')]);
                                                         if($value->sub_category != 0) {
                                                             ?>
                                                             <h5 class="head">Sub category:<a
-                                                                        href="dashboard=<?php echo $subCategoryObj->getNameFromId($value->sub_category) ?>"><?php echo $subCategoryObj->getNameFromId($value->sub_category) ?></a>
+                                                                        href="subcategory=<?php echo $value->sub_category ?>"><?php echo $subCategoryObj->getNameFromId($value->sub_category) ?></a>
                                                             </h5>
                                                             <?php
                                                         }
@@ -156,7 +151,7 @@ $categories = $categoryObj->get(['status', '=', Config::get('status/active')]);
                                             </div>
 
                                         <button class="btn btn-sm btn-primary pull-right edit">Edit</button>
-                                        <a href="deletecard=<?php echo $value->id; ?>"><button class="btn btn-sm btn-danger pull-left">Delete</button></a>
+                                        <a href="deletecard=<?php echo $value->id; ?>"><button class="btn btn-sm btn-danger pull-left deleteCard">Delete</button></a>
                                     </div>
                                     <div class="col-md-8 edit_form hidden">
                                         <h2>Edit <?php echo escape($Qstring);?></h2>
@@ -302,18 +297,15 @@ $categories = $categoryObj->get(['status', '=', Config::get('status/active')]);
                 $('div.price2').addClass('hidden');
                 $('input[name=price2]').removeAttr('required');
             }
-        })/*.on('click', "button[name=addMoreFiles]", function(e) {
-            $files = parseInt($("input[name=noOfFiles]").val());
-            $("input[name=noOfFiles]").val($files + 1);
-            $("form[name=card]").append(
-               "<div class='form-group'>"+
-                "<label for='inputPhoto'>Card " + ($files + 1) + "</label>"+
-                "<div class='input-group' style='width: 100%;'>"+
-                "<input type='file' class='form-control' id='inputPhoto' name='card" + $files + "'>"+
-                "</div>"+
-                "</div>"
-            );
-        })*/
+        }).on('click', "button.deleteCard", function(e) {
+            $ans = confirm("Are you sure you want to delete this card");
+            if($ans) {
+                $location = $(this).parent('a').attr('href');
+                //window.location.href = $location;
+            }else {
+                e.preventDefault();
+            }
+        })
     })
 </script>
 <?php

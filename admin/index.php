@@ -16,11 +16,11 @@
 	$route->add('savesort');
 	$route->add('/adduser');
 	$route->add('profile');
+	$route->add('subcategory');
 	$route->add('updateuser');
 	$route->add('deletecard');
 	$route->add('deletecategory');
 	$route->add('deletesubcategory');
-	$route->add('/categories');
 	$route->add('/cards');
 	$route->add('/login');
 	$route->add('/dashboard');

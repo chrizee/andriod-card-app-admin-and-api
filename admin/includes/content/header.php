@@ -162,7 +162,7 @@
           </li>
           <li class="<?php if($query[0] == 'other_app_link') echo 'active'?>">
               <a href="other_app_link">
-                  <i class="fa fa-user"></i> <span>Link to other apps</span>
+                  <i class="fa fa-link"></i> <span>Link to other apps</span>
               </a>
           </li>
         <li class="treeview">

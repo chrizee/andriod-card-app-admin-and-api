@@ -139,4 +139,15 @@ class Categories extends Action
         }
         return false;
     }
+
+    public function getTotal($id = '') {
+        if($id) {
+            $field = ($this->_table == 'categories') ? 'category' : 'sub_category';
+            $sql = "SELECT COUNT(*) as total FROM cards WHERE $field  = ? AND status =". Config::get('status/active');
+            if (!$data = DB::getInstance()->query($sql, array($id))) {
+                throw new PDOException("There was a problem getting total record");
+            }
+            return $data->first()->total;
+        }
+    }
 }

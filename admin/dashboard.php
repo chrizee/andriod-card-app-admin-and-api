@@ -66,7 +66,7 @@ $categories = $categoryObj->get(['status', '=', Config::get('status/active')]);
                                             <ul class="dropdown-menu">
                                                 <?php foreach ($sublist as $list){
                                     ?>
-                                                <li><a href="dashboard=<?php echo $list->name?>"><?php echo $list->name?></a></li>
+                                                <li><a href="subcategory=<?php echo $list->id?>"><?php echo $list->name?></a></li>
                                     <?php }?>
                                             </ul>
                                                 <?php }?>
@@ -91,15 +91,10 @@ $categories = $categoryObj->get(['status', '=', Config::get('status/active')]);
                         <!-- /.box-header -->
                         <div class="box-body">
                             <?php
-                            if(($category = $categoryObj->getIdFromName($Qstring)) || ($category = $subCategoryObj->getIdFromName($Qstring))) {
+                            if($category = $categoryObj->getIdFromName($Qstring)) {
                                 $card = $cardObj->get(array('category', '=', $category, 'status', '=', Config::get('status/active')));
                                 $cat = $categoryObj->get(['name', '=', $Qstring, 'status', '=', Config::get('status/active')]); //check for category using name not to conflict with sub category
                                 $folder = "category";
-                                if(empty($cat)) {   //first time it shud be or
-                                    $card = $cardObj->get(array('sub_category', '=', $category, 'status', '=', Config::get('status/active')));
-                                    $cat = $subCategoryObj->get(['id', '=', $category, 'status', '=', Config::get('status/active')]);
-                                    $folder = "sub category";
-                                }
                                 ?>
                                 <div class="row">
                                     <div class="col-md-4">
@@ -115,7 +110,8 @@ $categories = $categoryObj->get(['status', '=', Config::get('status/active')]);
                                         <p class="clearfix"></p>
                                         <button class="btn btn-sm btn-warning editCategory">Edit <?php echo $folder; ?></button>
                                         <?php
-                                            if($folder == 'category'){
+                                            $sublist2 = $categoryObj->hasSubCategories($category);
+                                            if($folder == 'category' && $sublist2){
                                         ?>
                                         <button class="btn btn-sm btn-primary sortSub">Sort subcategories</button>
                                             <?php }?>
@@ -123,9 +119,8 @@ $categories = $categoryObj->get(['status', '=', Config::get('status/active')]);
                                     <div class="col-md-6 sortSub hidden">
                                         <ul class="list-group" id="subCategories">
                                         <?php
-                                            $sublist = $categoryObj->hasSubCategories($categoryObj->getIdFromName($Qstring));
-                                            if(count($sublist)) {
-                                                foreach ($sublist as $key => $value) {?>
+                                            if($sublist2) {
+                                                foreach ($sublist2 as $key => $value) {?>
                                                     <li class="list-group-item" title="<?php echo $value->id?>"><?php echo $value->name?></li>
                                                 <?php }
                                             }
@@ -176,7 +171,7 @@ $categories = $categoryObj->get(['status', '=', Config::get('status/active')]);
                                                         if($value->sub_category != 0) {
                                                             ?>
                                                             <h5 class="head">Sub category: <a
-                                                                        href="dashboard=<?php echo $subCategoryObj->getNameFromId($value->sub_category) ?>"><?php echo $subCategoryObj->getNameFromId($value->sub_category) ?></a>
+                                                                        href="subcategory=<?php echo $value->sub_category ?>"><?php echo $subCategoryObj->getNameFromId($value->sub_category) ?></a>
                                                             </h5>
                                                             <?php
                                                         }
@@ -205,7 +200,7 @@ $categories = $categoryObj->get(['status', '=', Config::get('status/active')]);
                 <div class="col-md-9 default">
                     <div class="box box-primary">
                         <div class="box-header with-border">
-                            <h3 class="box-title">All Cards</h3>
+                            <h3 class="box-title">All Cards (<?php echo Card::getTotal(); ?>)</h3>
                             <a href="cards"><button class="pull-right btn btn-sm btn-success"><i class="fa fa-plus"></i> Add card</button></a>
                         </div>
                         <!-- /.box-header -->
@@ -228,7 +223,7 @@ $categories = $categoryObj->get(['status', '=', Config::get('status/active')]);
                                                     if($value->sub_category != 0) {
                                                         ?>
                                                         <h5 class="head">Sub category: <a
-                                                                    href="dashboard=<?php echo $subCategoryObj->getNameFromId($value->sub_category) ?>"><?php echo $subCategoryObj->getNameFromId($value->sub_category) ?></a>
+                                                                    href="subcategory=<?php echo $value->sub_category ?>"><?php echo $subCategoryObj->getNameFromId($value->sub_category) ?></a>
                                                         </h5>
                                                         <?php
                                                     }
@@ -326,11 +321,11 @@ $categories = $categoryObj->get(['status', '=', Config::get('status/active')]);
         }).on('click', 'input[name=sub]', function(e) {
             if($(this).val() == '1') {
                 $('div.mainCat').removeClass('hidden').slideDown('slow');
-                $('select[name=category]').attr('required','required');
+                $('select[name=parent]').attr('required','required');
             }else{
                 $(this).value = 0;
                 $('div.mainCat').slideUp('slow');
-                $('select[name=category]').removeAttr('required');
+                $('select[name=parent]').removeAttr('required');
             }
         }).on('click', "button.editCategory", function(e) {
             $("div.actionButtons").addClass('hidden');
@@ -374,7 +369,6 @@ $categories = $categoryObj->get(['status', '=', Config::get('status/active')]);
             cursor: 'move',
             update: saveUpdate
         });
-        //$("ul#categories li").filter(":first-child").sortable('destroy');
         $('ul#subCategories').sortable({
             opacity: 0.8,
             cursor: 'move',

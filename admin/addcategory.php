@@ -17,7 +17,7 @@ if(Input::exists() && !empty(Input::get('category'))) {
             if(Input::get('sub') == 1 && !empty(Input::get('parent'))){
                 $subCategoryObj->add();
                 Session::flash('home', Input::get('name') . " added");
-                Redirect::to("dashboard=" . Input::get('name'));
+                Redirect::to("dashboard");
             }else {
                 $categoryObj->add();
                 Session::flash('home', Input::get('name') . " added");
@@ -51,7 +51,7 @@ if(Input::exists() && !empty(Input::get('editCategory'))) {
             if(Input::get('sub') == '1'){
                 $subCategoryObj->edit();
                 Session::flash('home', "Subcategory updated");
-                Redirect::to("dashboard=" . Input::get('name'));
+                Redirect::to("subcategory=" . Input::get('id'));
             }else {
                 $categoryObj->edit();
                 Session::flash('home', "Category updated");
